@@ -17,9 +17,9 @@ class MPDrastProcess:
         dirs.append(item["directory"])
       elif item.has_key("file"):
         files.append(item["file"])
-    
+
     return (files, dirs)
-  
+
   @staticmethod
   def process_song(item):
     """
@@ -30,5 +30,5 @@ class MPDrastProcess:
 
     if item.has_key("pos"):
       item["pos"] = int(item["pos"])
-    
+
     return item

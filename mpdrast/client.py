@@ -16,7 +16,7 @@ class MPDrastClient(mpd.MPDClient):
     if len(infos) == 2:
       password = infos[0]
       host = infos[1]
-    
+
     mpd.MPDClient.connect(self, host, port)
     if password:
       self.password(password)
@@ -25,7 +25,7 @@ class MPDrastClient(mpd.MPDClient):
   def update_final_dirs(self, path="", first=True):
     if first:
       self.final_dirs = []
-    
+
     items = self.lsinfo(path)
     if first and not items:
       raise Exception("database is empty")
