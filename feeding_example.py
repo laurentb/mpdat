@@ -16,6 +16,6 @@ m.update_final_dirs("")
 
 # if the playlist is empty, add one random album
 if m.is_playlist_hungry(1):
-  m.add(m.get_random_dir())
+    m.add(m.get_random_dir())
 
 print m.status()
