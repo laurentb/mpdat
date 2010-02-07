@@ -3,7 +3,7 @@ import mpd
 import time
 import random
 
-from process import MPDrastProcess
+import process
 
 class MPDrastClient(mpd.MPDClient):
     def __init__(self):
@@ -30,7 +30,7 @@ class MPDrastClient(mpd.MPDClient):
         if first and not items:
             raise Exception("database is empty")
 
-        files, dirs = MPDrastProcess.get_files_and_dirs_from_db(items)
+        files, dirs = process.get_files_and_dirs_from_db(items)
         if len(files) and len(dirs) == 0:
             self.final_dirs.append(path)
         else:
@@ -45,7 +45,6 @@ class MPDrastClient(mpd.MPDClient):
     def get_random_dir(self):
         return random.choice(self.final_dirs)
 
-    # Om Nom Nom Nom
     def is_playlist_hungry(self, hungriness=100):
         return int(self.status()["playlistlength"]) < hungriness
 
@@ -53,7 +52,7 @@ class MPDrastClient(mpd.MPDClient):
         return int(self.status()["playlistlength"]) == 0
 
     def _find_changing_pos(self, number, type):
-        pl = (MPDrastProcess.process_song(item) for item in self.playlistinfo())
+        pl = (process.process_song(item) for item in self.playlistinfo())
         value = None
         count = -1
         for song in pl:
