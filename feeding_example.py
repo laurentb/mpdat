@@ -1,11 +1,11 @@
 #!/usr/bin/env python
-import mpdrast
+from mpdrast import MPDrastClient
 from os import environ
 
 mpd_host = environ.get("MPD_HOST", "localhost")
 mpd_port = environ.get("MPD_PORT", 6600)
 
-m = mpdrast.MPDrastClient()
+m = MPDrastClient()
 m.connect(mpd_host, mpd_port)
 
 # the user can run mpc update before; wait for completion

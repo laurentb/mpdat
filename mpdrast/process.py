@@ -1,4 +1,4 @@
-import posixpath
+from os.path import dirname
 
 """
 Process MPDrastClient responses
@@ -23,7 +23,7 @@ def process_song(item):
     Adds a "dir" attribute to songs, change "pos" to int
     """
     if item.has_key("file"):
-        item["dir"] = posixpath.dirname(item["file"])
+        item["dir"] = dirname(item["file"])
 
     if item.has_key("pos"):
         item["pos"] = int(item["pos"])

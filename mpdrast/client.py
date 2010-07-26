@@ -3,7 +3,7 @@ import mpd
 import time
 import random
 
-import process
+import mpdrast.process as process
 
 class MPDrastClient(mpd.MPDClient):
     def __init__(self):
