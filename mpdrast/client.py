@@ -10,14 +10,15 @@ class MPDrastClient(mpd.MPDClient):
         mpd.MPDClient.__init__(self)
         self.final_dirs = []
 
-    def connect(self, host, port):
+
+    def connect_from_env(self, host, port):
         password = None
         infos = host.split('@')
         if len(infos) == 2:
             password = infos[0]
             host = infos[1]
 
-        mpd.MPDClient.connect(self, host, port)
+        self.connect(host, port)
         if password:
             self.password(password)
 
@@ -42,14 +43,18 @@ class MPDrastClient(mpd.MPDClient):
         while self.status().has_key("updating_db"):
             time.sleep(1)
 
+
     def get_random_dir(self):
         return random.choice(self.final_dirs)
+
 
     def is_playlist_hungry(self, hungriness=100):
         return int(self.status()["playlistlength"]) < hungriness
 
+
     def is_playlist_empty(self):
         return int(self.status()["playlistlength"]) == 0
+
 
     def _find_changing_pos(self, number, type):
         pl = (process.process_song(item) for item in self.playlistinfo())
@@ -61,6 +66,7 @@ class MPDrastClient(mpd.MPDClient):
                 value = song[type]
             if count == number:
                 return song["pos"]
+
 
     def clean_but(self, number=1, type="album"):
         pos = self._find_changing_pos(number, type)

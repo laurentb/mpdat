@@ -6,7 +6,7 @@ mpd_host = environ.get("MPD_HOST", "localhost")
 mpd_port = environ.get("MPD_PORT", 6600)
 
 m = MPDrastClient()
-m.connect(mpd_host, mpd_port)
+m.connect_from_env(mpd_host, mpd_port)
 
 # the user can run mpc update before; wait for completion
 m.wait_for_update()

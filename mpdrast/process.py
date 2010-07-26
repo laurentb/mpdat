@@ -18,6 +18,7 @@ def get_files_and_dirs_from_db(items):
 
     return (files, dirs)
 
+
 def process_song(item):
     """
     Adds a "dir" attribute to songs, change "pos" to int
