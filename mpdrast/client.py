@@ -12,6 +12,17 @@ class MPDrastClient(mpd.MPDClient):
 
 
     def connect_from_env(self, host, port):
+        """
+        Connect from MPD_HOST (host parameter) and MPD_PORT (port parameter)
+        like most MPD clients do.
+
+        >>> from os import environ
+        >>> mpd_host = environ.get("MPD_HOST", "localhost")
+        >>> mpd_port = environ.get("MPD_PORT", 6600)
+        >>> m = MPDrastClient()
+        >>> m.connect_from_env(mpd_host, mpd_port)
+        >>> m.ping()
+        """
         password = None
         infos = host.split('@')
         if len(infos) == 2:
@@ -24,6 +35,20 @@ class MPDrastClient(mpd.MPDClient):
 
 
     def update_final_dirs(self, path="", first=True):
+        """
+        Compute a list of directory containing only files.
+        They can be considered as full albums. Remember that MPD indexes
+        only music; if a directory has subdirectories of non-music files,
+        it will not prevent the directory from being added (which is good).
+
+        If first is True, the function considers that it represents the root,
+        and will clear the existing list of "final dirs". If not, it will
+        append to the list. The function is recursive, hence this paratemer.
+        There should be no need to call it with first=False manually.
+
+        The root path can be any subdirectory of the database, any directory
+        not in the path will be ignored.
+        """
         if first:
             self.final_dirs = []
 
@@ -40,6 +65,9 @@ class MPDrastClient(mpd.MPDClient):
 
 
     def wait_for_update(self):
+        """
+        If mpd is updating the database, block until it has finished.
+        """
         while self.status().has_key("updating_db"):
             time.sleep(1)
 
