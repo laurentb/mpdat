@@ -12,10 +12,14 @@ m.connect_from_env(mpd_host, mpd_port)
 m.wait_for_update()
 
 # get all "final" directories
-m.update_final_dirs("")
+nb_dirs = len(m.get_final_dirs())
+print "We have found %s albums." % nb_dirs
 
 # if the playlist is empty, add one random album
-if m.is_playlist_hungry(1):
-    m.add(m.get_random_dir())
+while m.is_playlist_hungry(100) and nb_dirs:
+    rdir = m.get_random_dir()
+    m.add(rdir)
+    print "Added %s" % rdir
 
 print m.status()
+print m.stats()

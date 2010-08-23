@@ -4,11 +4,11 @@ import time
 import random
 
 import mpdrast.process as process
+from mpdrast.cache import cache, uhash
 
 class MPDrastClient(mpd.MPDClient):
     def __init__(self):
         mpd.MPDClient.__init__(self)
-        self.final_dirs = []
 
 
     def connect_from_env(self, host, port):
@@ -34,34 +34,38 @@ class MPDrastClient(mpd.MPDClient):
             self.password(password)
 
 
-    def update_final_dirs(self, path="", first=True):
+    def get_final_dirs(self, root=""):
         """
-        Compute a list of directory containing only files.
+        Get a list of directory containing only files.
         They can be considered as full albums. Remember that MPD indexes
         only music; if a directory has subdirectories of non-music files,
         it will not prevent the directory from being added (which is good).
 
-        If first is True, the function considers that it represents the root,
-        and will clear the existing list of "final dirs". If not, it will
-        append to the list. The function is recursive, hence this paratemer.
-        There should be no need to call it with first=False manually.
+        The root path can be any subdirectory of the database, any
+        directory not in the path will be ignored.
 
-        The root path can be any subdirectory of the database, any directory
-        not in the path will be ignored.
+        The list is cached, it will be repopulated after a database update.
         """
-        if first:
-            self.final_dirs = []
+        _updated = int(self.stats()["db_update"])
+        _hash = uhash(root)
+        return self._get_final_dirs(_updated=_updated, _hash=_hash, root=root)
 
-        items = self.lsinfo(path)
-        if first and not items:
-            raise Exception("database is empty")
 
-        files, dirs = process.get_files_and_dirs_from_db(items)
-        if len(files) and len(dirs) == 0:
-            self.final_dirs.append(path)
-        else:
-            for dir in dirs:
-                self.update_final_dirs(dir, False)
+    @cache("final_dirs")
+    def _get_final_dirs(self, root):
+        final_dirs = []
+        def update_final_dirs(path=""):
+            items = self.lsinfo(path)
+
+            files, directories = process.get_files_and_dirs_from_db(items)
+            if len(files) and len(directories) == 0:
+                final_dirs.append(path)
+            else:
+                for directory in directories:
+                    update_final_dirs(directory)
+
+        update_final_dirs(root)
+        return final_dirs
 
 
     def wait_for_update(self):
@@ -73,7 +77,7 @@ class MPDrastClient(mpd.MPDClient):
 
 
     def get_random_dir(self):
-        return random.choice(self.final_dirs)
+        return random.choice(self.get_final_dirs())
 
 
     def is_playlist_hungry(self, hungriness=100):
