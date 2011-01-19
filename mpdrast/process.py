@@ -29,4 +29,7 @@ def process_song(item):
     if item.has_key("pos"):
         item["pos"] = int(item["pos"])
 
+    if item.has_key("time"):
+        item["time"] = int(item["time"])
+
     return item

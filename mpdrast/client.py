@@ -88,6 +88,11 @@ class MPDrastClient(mpd.MPDClient):
         return int(self.status()["playlistlength"]) == 0
 
 
+    def get_playlist_time(self):
+        pl = (process.process_song(item) for item in self.playlistinfo())
+        return sum([song["time"] for song in pl])
+
+
     def _find_changing_pos(self, number, type):
         pl = (process.process_song(item) for item in self.playlistinfo())
         value = None
