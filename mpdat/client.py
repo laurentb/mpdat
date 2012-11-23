@@ -6,10 +6,10 @@ import random
 import mpdat.process as process
 from mpdat.cache import cache, uhash
 
+
 class MPDatClient(mpd.MPDClient):
     def __init__(self):
         mpd.MPDClient.__init__(self)
-
 
     def connect_from_env(self, host, port):
         """
@@ -33,7 +33,6 @@ class MPDatClient(mpd.MPDClient):
         if password:
             self.password(password)
 
-
     def get_final_dirs(self, root=""):
         """
         Get a list of directory containing only files.
@@ -50,10 +49,10 @@ class MPDatClient(mpd.MPDClient):
         _hash = uhash(root)
         return self._get_final_dirs(_updated=_updated, _hash=_hash, root=root)
 
-
     @cache("final_dirs")
     def _get_final_dirs(self, root):
         final_dirs = []
+
         def update_final_dirs(path=""):
             items = self.lsinfo(path)
 
@@ -67,31 +66,25 @@ class MPDatClient(mpd.MPDClient):
         update_final_dirs(root)
         return final_dirs
 
-
     def wait_for_update(self):
         """
         If mpd is updating the database, block until it has finished.
         """
-        while self.status().has_key("updating_db"):
+        while "updating_db" in self.status():
             time.sleep(1)
-
 
     def get_random_dir(self):
         return random.choice(self.get_final_dirs())
 
-
     def is_playlist_hungry(self, hungriness=100):
         return int(self.status()["playlistlength"]) < hungriness
-
 
     def is_playlist_empty(self):
         return int(self.status()["playlistlength"]) == 0
 
-
     def get_playlist_time(self):
         pl = (process.process_song(item) for item in self.playlistinfo())
         return sum([song["time"] for song in pl])
-
 
     def get_playlist_albums(self):
         pl = (process.process_song(item) for item in self.playlistinfo())
@@ -105,11 +98,9 @@ class MPDatClient(mpd.MPDClient):
                 songs = []
             songs.append(song)
 
-
     def get_playlist_albums_time(self):
         for album in self.get_playlist_albums():
             yield (sum([song["time"] for song in album]), album)
-
 
     def _find_changing_pos(self, number, type):
         pl = (process.process_song(item) for item in self.playlistinfo())
@@ -122,7 +113,6 @@ class MPDatClient(mpd.MPDClient):
             if count == number:
                 return song["pos"]
 
-
     def clean_but(self, number=1, type="album"):
         pos = self._find_changing_pos(number, type)
 
@@ -132,4 +122,3 @@ class MPDatClient(mpd.MPDClient):
                     self.delete(pos)
             except mpd.CommandError:
                 pass
-

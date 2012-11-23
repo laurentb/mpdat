@@ -7,13 +7,14 @@ from hashlib import sha1
 
 USER_DIR = join(expanduser('~'), '.mpdat')
 
+
 def cache(name):
     def decorator(fn):
         def wrapper(*args, **kwargs):
             _updated = kwargs["_updated"]
             del kwargs["_updated"]
 
-            if kwargs.has_key("_hash"):
+            if "_hash" in kwargs:
                 _hash = kwargs["_hash"]
                 del kwargs["_hash"]
             else:
@@ -24,8 +25,8 @@ def cache(name):
                 makedirs(cache_dir)
 
             cache_file = join(cache_dir, _hash)
-            if not exists(cache_file) or \
-                getmtime(cache_file) < _updated:
+            if not exists(cache_file) \
+                    or getmtime(cache_file) < _updated:
                 data = fn(*args, **kwargs)
                 with open(cache_file, 'w') as handle:
                     pickle.dump(data, handle)
@@ -39,8 +40,10 @@ def cache(name):
 
     return decorator
 
+
 def uhash(*args):
     return sha1(pickle.dumps(args)).hexdigest()
+
 
 def test():
     from tempfile import mkdtemp
@@ -70,7 +73,7 @@ def test():
     testval = "plop2"
     assert "plop" == f1(_updated=1)
     we_should_be_here = True
-    assert "plop2" == f1(_updated=time()+42)
+    assert "plop2" == f1(_updated=time() + 42)
 
     # Different cache for different parameters
     we_should_be_here = True
@@ -79,4 +82,3 @@ def test():
     assert "plap" == f2(_updated=1, _hash=uhash("plap"), testparam="plap")
     we_should_be_here = True
     assert "plip" == f2(_updated=1, _hash=uhash("plip"), testparam="plip")
-

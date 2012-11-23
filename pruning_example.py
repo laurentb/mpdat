@@ -11,4 +11,3 @@ m.connect_from_env(mpd_host, mpd_port)
 
 # Keep only one album in the playlist
 m.clean_but(1, "album")
-
