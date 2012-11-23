@@ -5,7 +5,7 @@ from os.path import join, expanduser, exists, getmtime, isdir
 from os import makedirs
 from hashlib import sha1
 
-USER_DIR = join(expanduser('~'), '.mpdrast')
+USER_DIR = join(expanduser('~'), '.mpdat')
 
 def cache(name):
     def decorator(fn):
@@ -47,7 +47,7 @@ def test():
     from time import time
 
     # TODO we should clean up after, also… it's kinda ugly
-    globals()["USER_DIR"] = mkdtemp(prefix='mpdrast')
+    globals()["USER_DIR"] = mkdtemp(prefix='mpdat')
     print "Testing in %s." % USER_DIR
 
     we_should_be_here = False

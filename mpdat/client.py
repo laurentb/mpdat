@@ -3,10 +3,10 @@ import mpd
 import time
 import random
 
-import mpdrast.process as process
-from mpdrast.cache import cache, uhash
+import mpdat.process as process
+from mpdat.cache import cache, uhash
 
-class MPDrastClient(mpd.MPDClient):
+class MPDatClient(mpd.MPDClient):
     def __init__(self):
         mpd.MPDClient.__init__(self)
 
@@ -19,7 +19,7 @@ class MPDrastClient(mpd.MPDClient):
         >>> from os import environ
         >>> mpd_host = environ.get("MPD_HOST", "localhost")
         >>> mpd_port = environ.get("MPD_PORT", 6600)
-        >>> m = MPDrastClient()
+        >>> m = MPDatClient()
         >>> m.connect_from_env(mpd_host, mpd_port)
         >>> m.ping()
         """

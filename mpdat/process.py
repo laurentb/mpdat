@@ -1,7 +1,7 @@
 from os.path import dirname
 
 """
-Process MPDrastClient responses
+Process MPDatClient responses
 """
 
 def get_files_and_dirs_from_db(items):
