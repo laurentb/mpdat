@@ -93,6 +93,24 @@ class MPDrastClient(mpd.MPDClient):
         return sum([song["time"] for song in pl])
 
 
+    def get_playlist_albums(self):
+        pl = (process.process_song(item) for item in self.playlistinfo())
+        d = None
+        songs = []
+        for song in pl:
+            if song["dir"] != d:
+                d = song["dir"]
+                if songs:
+                    yield songs
+                songs = []
+            songs.append(song)
+
+
+    def get_playlist_albums_time(self):
+        for album in self.get_playlist_albums():
+            yield (sum([song["time"] for song in album]), album)
+
+
     def _find_changing_pos(self, number, type):
         pl = (process.process_song(item) for item in self.playlistinfo())
         value = None
