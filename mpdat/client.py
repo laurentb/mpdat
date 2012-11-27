@@ -122,3 +122,10 @@ class MPDatClient(mpd.MPDClient):
                     self.delete(pos)
             except mpd.CommandError:
                 pass
+
+    def single_stop(self):
+        self.single(1)
+        while self.status()['state'] != 'pause':
+            time.sleep(1)
+        self.single(0)
+        self.stop()
