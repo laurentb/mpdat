@@ -97,6 +97,8 @@ class MPDatClient(mpd.MPDClient):
                     yield songs
                 songs = []
             songs.append(song)
+        if songs:
+            yield songs
 
     def get_playlist_albums_time(self):
         for album in self.get_playlist_albums():
