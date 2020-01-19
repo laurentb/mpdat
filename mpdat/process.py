@@ -1,5 +1,6 @@
 from os.path import dirname
 
+
 """
 Process MPDatClient responses
 """

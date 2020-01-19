@@ -1,7 +1,7 @@
-import mpd
-
-import time
 import random
+import time
+
+import mpd
 
 import mpdat.process as process
 from mpdat.cache import cache, uhash

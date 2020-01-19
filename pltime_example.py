@@ -1,8 +1,8 @@
-#!/usr/bin/env python
-from mpdat import MPDatClient
+#!/usr/bin/env python3
+import datetime
 from os import environ
 
-import datetime
+from mpdat import MPDatClient
 
 
 def humandelta(seconds):
@@ -19,7 +19,7 @@ m.connect_from_env(mpd_host, mpd_port)
 
 
 for time, album in m.get_playlist_albums_time():
-    print '%s: %s%s%s' % (album[0]["dir"], BRIGHT, humandelta(time), NORMAL)
+    print('%s: %s%s%s' % (album[0]["dir"], BRIGHT, humandelta(time), NORMAL))
 
-print
-print 'TOTAL: %s%s%s' % (BRIGHT, humandelta(m.get_playlist_time()), NORMAL)
+print()
+print('TOTAL: %s%s%s' % (BRIGHT, humandelta(m.get_playlist_time()), NORMAL))

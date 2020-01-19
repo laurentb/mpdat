@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
-
 import pickle
-from os.path import join, expanduser, exists, getmtime, isdir
-from os import makedirs
 from hashlib import sha1
+from os import makedirs
+from os.path import exists, expanduser, getmtime, isdir, join
 
 USER_DIR = join(expanduser('~'), '.mpdat')
 
@@ -28,10 +26,10 @@ def cache(name):
             if not exists(cache_file) \
                     or getmtime(cache_file) < _updated:
                 data = fn(*args, **kwargs)
-                with open(cache_file, 'w') as handle:
+                with open(cache_file, 'wb') as handle:
                     pickle.dump(data, handle)
             else:
-                with open(cache_file, 'r') as handle:
+                with open(cache_file, 'rb') as handle:
                     data = pickle.load(handle)
 
             return data
@@ -51,7 +49,7 @@ def test():
 
     # TODO we should clean up after, also… it's kinda ugly
     globals()["USER_DIR"] = mkdtemp(prefix='mpdat')
-    print "Testing in %s." % USER_DIR
+    print("Testing in %s." % USER_DIR)
 
     we_should_be_here = False
     testval = "plop"
